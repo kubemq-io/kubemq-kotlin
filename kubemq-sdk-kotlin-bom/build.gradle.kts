@@ -10,7 +10,6 @@ javaPlatform {
 dependencies {
     constraints {
         api(project(":kubemq-sdk-kotlin"))
-        api(project(":kubemq-spring-boot-starter"))
     }
 }
 

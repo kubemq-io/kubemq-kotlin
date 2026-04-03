@@ -127,7 +127,8 @@ abstract class BasePattern(
         block: suspend () -> Unit,
     ) {
         if (ratePerSecond <= 0) return
-        val intervalMs = 1000L / ratePerSecond
+        val intervalNanos = 1_000_000_000L / ratePerSecond
+        var nextSendTime = System.nanoTime()
         while (scope.isActive && running) {
             try {
                 block()
@@ -136,7 +137,15 @@ abstract class BasePattern(
             } catch (e: Exception) {
                 logger.debug("Rate-limited operation failed: {}", e.message)
             }
-            delay(intervalMs)
+            nextSendTime += intervalNanos
+            val now = System.nanoTime()
+            val sleepMs = (nextSendTime - now) / 1_000_000
+            if (sleepMs > 0) {
+                delay(sleepMs)
+            } else if (now - nextSendTime > 1_000_000_000L) {
+                // More than 1s behind schedule — reset to avoid burst catch-up
+                nextSendTime = now
+            }
         }
     }
 }
