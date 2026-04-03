@@ -6,7 +6,6 @@ rootProject.name = "kubemq-kotlin"
 
 include(
     "kubemq-sdk-kotlin",
-    "kubemq-spring-boot-starter",
     "kubemq-sdk-kotlin-bom",
     "examples",
     "burnin"

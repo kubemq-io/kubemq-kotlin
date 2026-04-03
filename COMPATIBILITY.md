@@ -18,14 +18,6 @@
 | kotlin-logging | 7.0.3+ | SLF4J-based logging |
 | OpenTelemetry | 1.46.0+ | Optional, for tracing and metrics |
 
-## Spring Boot Integration
-
-| Requirement | Version |
-|-------------|---------|
-| Spring Boot | 3.4.0+ |
-| Spring Framework | 6.2+ |
-| Kotlin Spring Plugin | 2.0+ |
-
 ## KubeMQ Server
 
 | Server Version | Supported |
