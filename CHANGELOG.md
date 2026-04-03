@@ -11,7 +11,6 @@
 - DSL builders for all message types
 - Connection lifecycle with automatic reconnection
 - OpenTelemetry observability (optional)
-- Spring Boot starter auto-configuration
 - BOM module for dependency management
 - 13 example programs
 - Burn-in soak test application

@@ -28,7 +28,6 @@ detekt {
     buildUponDefaultConfig = true
     source.setFrom(
         "kubemq-sdk-kotlin/src/main/kotlin",
-        "kubemq-spring-boot-starter/src/main/kotlin",
         "examples/src/main/kotlin"
     )
 }

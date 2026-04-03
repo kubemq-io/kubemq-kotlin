@@ -33,7 +33,6 @@ Thank you for your interest in contributing. This guide covers the development w
 ```
 kubemq-kotlin/
   kubemq-sdk-kotlin/       # Core SDK
-  kubemq-spring-boot-starter/  # Spring Boot auto-configuration
   kubemq-sdk-kotlin-bom/   # BOM for dependency management
   examples/                 # Example programs
   burnin/                   # Burn-in soak test application

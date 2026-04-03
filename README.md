@@ -17,7 +17,6 @@ A Kotlin-first SDK for [KubeMQ](https://kubemq.io) message broker, built with co
 - [Queues](#queues)
 - [Commands and Queries](#commands-and-queries)
 - [Channel Management](#channel-management)
-- [Spring Boot Integration](#spring-boot-integration)
 - [Requirements](#requirements)
 - [Modules](#modules)
 - [Documentation](#documentation)
@@ -33,7 +32,6 @@ A Kotlin-first SDK for [KubeMQ](https://kubemq.io) message broker, built with co
 - **DSL Builders** -- Idiomatic Kotlin builders for all message types
 - **Connection Lifecycle** -- Automatic reconnection with configurable backoff
 - **Observability** -- Optional OpenTelemetry tracing and metrics
-- **Spring Boot Starter** -- Auto-configuration for Spring Boot 3.4+
 - **BOM Module** -- Dependency management for consistent versions
 
 ## Quick Start
@@ -256,33 +254,6 @@ channels.forEach { println("${it.name}: ${it.lastActivity}") }
 pubsub.deleteEventsChannel("events.temperature")
 ```
 
-## Spring Boot Integration
-
-```kotlin
-dependencies {
-    implementation("io.kubemq.sdk:kubemq-spring-boot-starter:1.0.0")
-}
-```
-
-```yaml
-# application.yml
-kubemq:
-  address: localhost:50000
-  client-id: spring-app
-```
-
-```kotlin
-@Service
-class OrderService(private val pubSub: PubSubClient) {
-    suspend fun publishOrder(order: Order) {
-        pubSub.publishEvent(eventMessage {
-            channel = "events.orders"
-            body = Json.encodeToString(order).toByteArray()
-        })
-    }
-}
-```
-
 ## Requirements
 
 - Kotlin 2.0+
@@ -294,7 +265,6 @@ class OrderService(private val pubSub: PubSubClient) {
 | Module | Description |
 |--------|-------------|
 | `kubemq-sdk-kotlin` | Core SDK with all client types |
-| `kubemq-spring-boot-starter` | Spring Boot auto-configuration |
 | `kubemq-sdk-kotlin-bom` | BOM for dependency management |
 | `examples` | Example programs for all patterns |
 | `burnin` | Burn-in soak test application |
