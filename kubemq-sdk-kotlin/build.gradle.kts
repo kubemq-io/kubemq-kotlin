@@ -76,6 +76,8 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
 }
 
 mavenPublishing {
+    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+    signAllPublications()
     coordinates("io.kubemq.sdk", "kubemq-sdk-kotlin", project.version.toString())
     pom {
         name.set("KubeMQ Kotlin SDK")
