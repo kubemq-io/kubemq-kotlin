@@ -1,7 +1,9 @@
 package io.kubemq.sdk.burnin.http
 
 import io.kubemq.sdk.burnin.RunConfig
+import io.kubemq.sdk.burnin.RunState
 import io.kubemq.sdk.burnin.Runner
+import io.kubemq.sdk.burnin.toApiString
 import io.kubemq.sdk.burnin.metrics.Metrics
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -32,35 +34,41 @@ fun startHttpServer(runner: Runner, port: Int = 8888) {
 
         routing {
             get("/health") {
-                call.respondText("ok", ContentType.Text.Plain)
+                call.respondText(
+                    """{"status":"alive"}""",
+                    ContentType.Application.Json,
+                )
             }
 
             get("/ready") {
-                call.respondText("ready", ContentType.Text.Plain)
+                val state = runner.currentState.toApiString()
+                val status = when (runner.currentState) {
+                    RunState.STARTING, RunState.STOPPING -> "not_ready"
+                    else -> "ready"
+                }
+                val code = when (runner.currentState) {
+                    RunState.STARTING, RunState.STOPPING -> HttpStatusCode.ServiceUnavailable
+                    else -> HttpStatusCode.OK
+                }
+                call.respondText(
+                    """{"status":"$status","state":"$state"}""",
+                    ContentType.Application.Json,
+                    code,
+                )
             }
 
             get("/info") {
-                call.respond(
-                    mapOf(
-                        "sdk" to "kubemq-kotlin",
-                        "version" to "1.0.0",
-                        "runtime" to System.getProperty("java.version"),
-                        "state" to runner.currentState.name.lowercase(),
-                    ),
+                call.respondText(
+                    runner.getInfoJson().toString(),
+                    ContentType.Application.Json,
                 )
             }
 
             get("/broker/status") {
-                val result = runner.brokerStatus()
-                if (result.isSuccess) {
-                    call.respondText(result.getOrDefault("unknown"), ContentType.Text.Plain)
-                } else {
-                    call.respondText(
-                        "error: ${result.exceptionOrNull()?.message}",
-                        ContentType.Text.Plain,
-                        HttpStatusCode.ServiceUnavailable,
-                    )
-                }
+                call.respondText(
+                    runner.brokerStatusJson().toString(),
+                    ContentType.Application.Json,
+                )
             }
 
             post("/run/start") {
@@ -78,10 +86,11 @@ fun startHttpServer(runner: Runner, port: Int = 8888) {
 
                 val result = runner.start(config)
                 if (result.isSuccess) {
+                    val rid = result.getOrDefault("")
                     call.respondText(
-                        """{"status": "started", "run_id": "${result.getOrDefault("")}"}""",
+                        """{"run_id": "$rid", "state": "starting", "message": "Run started"}""",
                         ContentType.Application.Json,
-                        HttpStatusCode.OK,
+                        HttpStatusCode.Accepted,
                     )
                 } else {
                     call.respondText(
@@ -95,10 +104,11 @@ fun startHttpServer(runner: Runner, port: Int = 8888) {
             post("/run/stop") {
                 val result = runner.stop()
                 if (result.isSuccess) {
+                    val status = runner.status()
                     call.respondText(
-                        """{"status": "stopped"}""",
+                        """{"run_id": "${status.runId}", "state": "${status.state}", "message": "Run stopping"}""",
                         ContentType.Application.Json,
-                        HttpStatusCode.OK,
+                        HttpStatusCode.Accepted,
                     )
                 } else {
                     call.respondText(
@@ -111,6 +121,35 @@ fun startHttpServer(runner: Runner, port: Int = 8888) {
 
             get("/run/status") {
                 call.respond(runner.status())
+            }
+
+            get("/run/report") {
+                val report = runner.getReport()
+                if (report != null) {
+                    call.respondText(
+                        report.toString(),
+                        ContentType.Application.Json,
+                        HttpStatusCode.OK,
+                    )
+                } else {
+                    call.respondText(
+                        """{"error": "No report available"}""",
+                        ContentType.Application.Json,
+                        HttpStatusCode.NotFound,
+                    )
+                }
+            }
+
+            get("/run") {
+                call.respond(runner.status())
+            }
+
+            get("/run/config") {
+                call.respondText(
+                    """{"status":"ok"}""",
+                    ContentType.Application.Json,
+                    HttpStatusCode.OK,
+                )
             }
 
             post("/cleanup") {
