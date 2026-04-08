@@ -25,7 +25,7 @@ fun main() = runBlocking {
             val subJob = launch {
                 client.subscribeToQueries {
                     channel = CHANNEL
-                }.take(2).collect { query ->
+                }.take(1).collect { query ->
                     println("Handler received query: ${String(query.body)}")
                     val response = query.respond {
                         executed = true
@@ -58,7 +58,7 @@ fun main() = runBlocking {
             })
             println("Query 2: cacheHit=${resp2.cacheHit}, body=${String(resp2.body)}")
 
-            subJob.join()
+            subJob.join() // completes after take(1) — one handler call for query 1; query 2 is served from cache
         } finally {
             try { client.deleteQueriesChannel(CHANNEL) } catch (_: Exception) {}
         }
