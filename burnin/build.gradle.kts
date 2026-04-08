@@ -22,4 +22,5 @@ dependencies {
     implementation(libs.ktor.server.content)
     implementation(libs.ktor.serialization.json)
     implementation(libs.micrometer.prometheus)
+    implementation(libs.kaml)
 }

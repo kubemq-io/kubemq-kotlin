@@ -72,6 +72,16 @@ data class ShutdownConfig(
     @SerialName("cleanup_channels") val cleanupChannels: Boolean = true,
 )
 
+@Serializable
+data class MetricsConfig(
+    val port: Int = 8888,
+)
+
+@Serializable
+data class StartupConfig(
+    val metrics: MetricsConfig = MetricsConfig(),
+)
+
 val ALL_PATTERN_NAMES = listOf("events", "events_store", "queue_stream", "queue_simple", "commands", "queries")
 
 fun RunConfig.effectiveBrokerAddress(startupAddress: String): String {
