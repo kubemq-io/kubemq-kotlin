@@ -40,7 +40,7 @@ A Kotlin-first SDK for [KubeMQ](https://kubemq.io) message broker, built with co
 
 ```kotlin
 dependencies {
-    implementation("io.kubemq.sdk:kubemq-sdk-kotlin:1.0.0")
+    implementation("io.kubemq.sdk:kubemq-sdk-kotlin:1.0.1")
 }
 ```
 
@@ -48,7 +48,7 @@ Or use the BOM for version alignment:
 
 ```kotlin
 dependencies {
-    implementation(platform("io.kubemq.sdk:kubemq-sdk-kotlin-bom:1.0.0"))
+    implementation(platform("io.kubemq.sdk:kubemq-sdk-kotlin-bom:1.0.1"))
     implementation("io.kubemq.sdk:kubemq-sdk-kotlin")
 }
 ```
