@@ -7,7 +7,7 @@ This guide walks you through installing the SDK, connecting to a KubeMQ broker, 
 - **Kotlin** 2.0+ with JDK 11, 17, or 21
 - **Gradle** 8.0+ (Kotlin DSL recommended)
 - **KubeMQ broker** running locally or in Kubernetes
-  - Docker: `docker run -d -p 50000:50000 kubemq/kubemq-community:latest`
+  - Docker: `docker run -d -p 50000:50000 europe-docker.pkg.dev/kubemq/images/kubemq-next:latest`
 
 ## Installation
 

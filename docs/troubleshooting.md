@@ -13,7 +13,7 @@ Common issues and their solutions when using the KubeMQ Kotlin SDK.
    # Check if KubeMQ is running
    docker ps | grep kubemq
    # Start it
-   docker run -d -p 50000:50000 kubemq/kubemq-community:latest
+   docker run -d -p 50000:50000 europe-docker.pkg.dev/kubemq/images/kubemq-next:latest
    ```
 
 2. **Wrong address**
